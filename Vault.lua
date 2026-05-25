@@ -54,7 +54,15 @@ local _fm=Enum.Font.Code
 local _fu=Enum.Font.GothamMedium
 local _fb=Enum.Font.Gotham
 local _lp=_p.LocalPlayer
-local _pgs=_lp:WaitForChild("PlayerGui")
+local _pgs = _lp:WaitForChild("PlayerGui")
+local _cg = game:GetService("CoreGui")
+
+local function _getParent()
+    local ok, res = pcall(function() return _cg end)
+    return (ok and res) and res or _pgs
+end
+
+local _guiParent = _getParent()
 
 local function _uuid()
 	local t={"a","b","c","d","e","f","0","1","2","3","4","5","6","7","8","9"}
@@ -70,7 +78,7 @@ do
 	_ls.ResetOnSpawn=false
 	_ls.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
 	_ls.DisplayOrder=1000
-	_ls.Parent=_pgs
+	_ls.Parent=_guiParent
 	local _lbg=Instance.new("Frame")
 	_lbg.Size=UDim2.new(1,0,1,0)
 	_lbg.BackgroundTransparency=1
@@ -168,7 +176,7 @@ _sg2.Name="Vault_".._sid
 _sg2.ResetOnSpawn=false
 _sg2.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
 _sg2.DisplayOrder=999
-_sg2.Parent=_pgs
+_sg2.Parent=_guiParent
 
 ---@param r number
 ---@param p Instance
