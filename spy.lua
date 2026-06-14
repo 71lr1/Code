@@ -26,7 +26,187 @@ local realconfigs = {
     supersecretdevtoggle = false
 }
 
-local URL = "" -- Change this to Yours to start logging the Remotes Via Discord Webhook
+local URL = ""
+
+local function validateWebhook(url, callback)
+    if not url or url == "" then
+        callback(false, "URL cannot be empty")
+        return
+    end
+    if not url:match("^https://discord%.com/api/webhooks/") and not url:match("^https://discordapp%.com/api/webhooks/") and not url:match("^https://ptb%.discord%.com/api/webhooks/") and not url:match("^https://canary%.discord%.com/api/webhooks/") then
+        callback(false, "Not a valid Discord webhook URL")
+        return
+    end
+    pcall(function()
+        local res = request({
+            Url = url,
+            Method = "GET",
+        })
+        if res and res.StatusCode and res.StatusCode >= 200 and res.StatusCode < 300 then
+            callback(true, "Valid — starting...")
+        elseif res and res.StatusCode == 401 then
+            callback(false, "Invalid webhook (401 Unauthorized)")
+        elseif res and res.StatusCode == 404 then
+            callback(false, "Invalid webhook (404 Not Found)")
+        else
+            callback(false, "Invalid webhook (Status: " .. tostring(res and res.StatusCode or "unknown") .. ")")
+        end
+    end)
+end
+
+local function showWebhookPrompt(onComplete)
+    local webhookSaved = ""
+    if isfile and isfile("SimpleSpy//webhook.txt") then
+        webhookSaved = readfile("SimpleSpy//webhook.txt")
+    end
+
+    local promptGui = Instance.new("ScreenGui")
+    promptGui.Name = "SSWebhookPrompt"
+    promptGui.ResetOnSpawn = false
+    promptGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    promptGui.Parent = (gethui and gethui()) or CoreGui
+
+    local overlay = Instance.new("Frame")
+    overlay.Size = UDim2.new(1, 0, 1, 0)
+    overlay.BackgroundColor3 = Color3.new(0, 0, 0)
+    overlay.BackgroundTransparency = 0.5
+    overlay.BorderSizePixel = 0
+    overlay.Parent = promptGui
+
+    local box = Instance.new("Frame")
+    box.Size = UDim2.new(0, 420, 0, 200)
+    box.Position = UDim2.new(0.5, -210, 0.5, -100)
+    box.BackgroundColor3 = Color3.fromRGB(37, 35, 38)
+    box.BorderSizePixel = 0
+    box.Parent = promptGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = box
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 36)
+    title.BackgroundColor3 = Color3.fromRGB(53, 52, 55)
+    title.BackgroundTransparency = 0
+    title.BorderSizePixel = 0
+    title.Font = Enum.Font.SourceSansBold
+    title.Text = "RemoteSpy — Webhook Setup"
+    title.TextColor3 = Color3.new(1, 1, 1)
+    title.TextSize = 15
+    title.Parent = box
+
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, 6)
+    titleCorner.Parent = title
+
+    local titleFix = Instance.new("Frame")
+    titleFix.Size = UDim2.new(1, 0, 0, 8)
+    titleFix.Position = UDim2.new(0, 0, 1, -8)
+    titleFix.BackgroundColor3 = Color3.fromRGB(53, 52, 55)
+    titleFix.BorderSizePixel = 0
+    titleFix.Parent = title
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -20, 0, 20)
+    label.Position = UDim2.new(0, 10, 0, 46)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.SourceSans
+    label.Text = "Enter your Discord Webhook URL:"
+    label.TextColor3 = Color3.fromRGB(200, 200, 200)
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = box
+
+    local inputFrame = Instance.new("Frame")
+    inputFrame.Size = UDim2.new(1, -20, 0, 34)
+    inputFrame.Position = UDim2.new(0, 10, 0, 70)
+    inputFrame.BackgroundColor3 = Color3.fromRGB(26, 25, 27)
+    inputFrame.BorderSizePixel = 0
+    inputFrame.Parent = box
+
+    local inputCorner = Instance.new("UICorner")
+    inputCorner.CornerRadius = UDim.new(0, 4)
+    inputCorner.Parent = inputFrame
+
+    local input = Instance.new("TextBox")
+    input.Size = UDim2.new(1, -10, 1, 0)
+    input.Position = UDim2.new(0, 8, 0, 0)
+    input.BackgroundTransparency = 1
+    input.Font = Enum.Font.SourceSans
+    input.PlaceholderText = "https://discord.com/api/webhooks/..."
+    input.Text = webhookSaved
+    input.TextColor3 = Color3.new(1, 1, 1)
+    input.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+    input.TextSize = 13
+    input.TextXAlignment = Enum.TextXAlignment.Left
+    input.ClearTextOnFocus = false
+    input.Parent = inputFrame
+
+    local statusLabel = Instance.new("TextLabel")
+    statusLabel.Size = UDim2.new(1, -20, 0, 20)
+    statusLabel.Position = UDim2.new(0, 10, 0, 112)
+    statusLabel.BackgroundTransparency = 1
+    statusLabel.Font = Enum.Font.SourceSans
+    statusLabel.Text = ""
+    statusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    statusLabel.TextSize = 13
+    statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    statusLabel.Parent = box
+
+    local function makeBtn(text, xPos, color)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(0, 120, 0, 32)
+        btn.Position = UDim2.new(0, xPos, 0, 150)
+        btn.BackgroundColor3 = color
+        btn.BorderSizePixel = 0
+        btn.Font = Enum.Font.SourceSansBold
+        btn.Text = text
+        btn.TextColor3 = Color3.new(1, 1, 1)
+        btn.TextSize = 14
+        btn.AutoButtonColor = false
+        btn.Parent = box
+        local c = Instance.new("UICorner")
+        c.CornerRadius = UDim.new(0, 4)
+        c.Parent = btn
+        return btn
+    end
+
+    local validateBtn = makeBtn("Validate", 10, Color3.fromRGB(99, 86, 245))
+    local skipBtn = makeBtn("Skip (no log)", 145, Color3.fromRGB(70, 70, 75))
+
+    local validating = false
+
+    validateBtn.MouseButton1Click:Connect(function()
+        if validating then return end
+        validating = true
+        local url = input.Text:match("^%s*(.-)%s*$")
+        statusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        statusLabel.Text = "Testing webhook..."
+        validateWebhook(url, function(ok, msg)
+            statusLabel.Text = msg
+            if ok then
+                statusLabel.TextColor3 = Color3.fromRGB(68, 206, 91)
+                URL = url
+                if writefile and isfile then
+                    if not isfolder("SimpleSpy") then makefolder("SimpleSpy") end
+                    writefile("SimpleSpy//webhook.txt", url)
+                end
+                task.wait(1.2)
+                promptGui:Destroy()
+                onComplete()
+            else
+                statusLabel.TextColor3 = Color3.fromRGB(252, 51, 51)
+                validating = false
+            end
+        end)
+    end)
+
+    skipBtn.MouseButton1Click:Connect(function()
+        URL = ""
+        promptGui:Destroy()
+        onComplete()
+    end)
+end
 
 local configs = newproxy(true)
 local configsmetatable = getmetatable(configs)
