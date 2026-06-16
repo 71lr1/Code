@@ -1,1 +1,1 @@
-local p = game
+local p = game.P
