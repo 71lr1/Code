@@ -225,7 +225,7 @@ logo.forEach(l=>process.stdout.write("\x1b[90m"+l+"\x1b[0m\n"))
 console.log("")
 return new Promise(res=>{
 const rl=readline.createInterface({input:process.stdin,output:process.stdout})
-rl.question("  \x1b[37m@\x1b[0m ","ans"=>{rl.close();res(ans.trim())})
+rl.question("  @ ",function(ans){rl.close();res(ans.trim())})
 })
 }
 
