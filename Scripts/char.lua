@@ -1,9 +1,6 @@
 local p = game.Players.LocalPlayer
-
 local c = p.Character or p.CharacterAdded:Wait()
-
-local id = "rbxassetid://12307583853
-"
+local id = "rbxassetid://12307583853"
 
 for _, v in ipairs(c:GetDescendants()) do
 
