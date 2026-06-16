@@ -9,13 +9,9 @@ for _, v in ipairs(c:GetDescendants()) do
         for _, f in ipairs(Enum.NormalId:GetEnumItems()) do
 
             local d = Instance.new("Decal")
-
             d.Texture = id
-
             d.Face = f
-
             d.Parent = v
-
         end
 
     end
