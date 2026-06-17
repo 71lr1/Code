@@ -1,2 +1,2 @@
 local HttpService = game:GetService("HttpService")
-local api = HttpService
+local api = syn
