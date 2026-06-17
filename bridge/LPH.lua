@@ -1,1 +1,1 @@
-setmetatable
+setmetatable(table )
