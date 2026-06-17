@@ -1,1 +1,1 @@
-setmetatable(table )
+setmetatable(table: clear, )
