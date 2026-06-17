@@ -1,1 +1,1 @@
-local https = game
+local https = getmetatable
