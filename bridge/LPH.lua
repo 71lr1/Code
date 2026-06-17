@@ -1,1 +1,1 @@
-local 
+local data = game:GetService("DataStoreService")
