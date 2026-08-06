@@ -106,6 +106,10 @@ function lib:Window(text, preset, closebind)
     Main.ClipsDescendants = true
     Main.Visible = true
 
+    local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 8)
+    MainCorner.Parent = Main
+
     TabHold.Name = "TabHold"
     TabHold.Parent = Main
     TabHold.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -429,7 +433,7 @@ end)
         Tab.BackgroundTransparency = 1.000
         Tab.BorderSizePixel = 0
         Tab.Position = UDim2.new(0.31400001, 0, 0.147, 0)
-        Tab.Size = UDim2.new(0, 373, 0, 254)
+        Tab.Size = UDim2.new(0, 420, 0, 254)
         Tab.CanvasSize = UDim2.new(0, 0, 0, 0)
         Tab.ScrollBarThickness = 3
         Tab.Visible = false
