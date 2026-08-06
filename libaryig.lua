@@ -169,8 +169,8 @@ DragFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = true
         dragStart = input.Position
-        startPos = Main.Position
-        DragOutline.Position = Main.Position
+        startPos = UDim2.new(0, Main.AbsolutePosition.X + Main.AbsoluteSize.X / 2, 0, Main.AbsolutePosition.Y + Main.AbsoluteSize.Y / 2)
+        DragOutline.Position = startPos
         DragOutline.Size = Main.Size
         DragOutline.Visible = true
     end
@@ -180,9 +180,9 @@ UserInputService.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
         local delta = input.Position - dragStart
         DragOutline.Position = UDim2.new(
-            startPos.X.Scale,
+            0,
             startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
+            0,
             startPos.Y.Offset + delta.Y
         )
     end
