@@ -140,6 +140,57 @@ function lib:Window(text, preset, closebind)
 
     MakeDraggable(DragFrame, Main)
 
+    local Resize = Instance.new("ImageButton")
+Resize.Name = "Resize"
+Resize.Parent = Main
+Resize.AnchorPoint = Vector2.new(1, 1)
+Resize.BackgroundTransparency = 1.000
+Resize.Position = UDim2.new(1, -4, 1, -4)
+Resize.Size = UDim2.new(0, 16, 0, 16)
+Resize.ZIndex = 2
+Resize.Image = "rbxassetid://3926307971"
+Resize.ImageColor3 = Color3.fromRGB(186, 13, 68)
+Resize.ImageRectOffset = Vector2.new(204, 364)
+Resize.ImageRectSize = Vector2.new(36, 36)
+
+local resizeDefaultX = 560
+local resizeDefaultY = 319
+local resizeLocationX = 0
+local resizeLocationY = 0
+
+Resize.MouseButton1Down:Connect(function()
+    resizeLocationX = UserInputService:GetMouseLocation().X
+    resizeLocationY = UserInputService:GetMouseLocation().Y
+
+    local moveConnection
+    local releaseConnection
+
+    moveConnection = Mouse.Move:Connect(function()
+        local deltaX = UserInputService:GetMouseLocation().X - resizeLocationX
+        local deltaY = UserInputService:GetMouseLocation().Y - resizeLocationY
+
+        Main.Size = Main.Size + UDim2.new(0, deltaX, 0, deltaY)
+        resizeLocationX = UserInputService:GetMouseLocation().X
+        resizeLocationY = UserInputService:GetMouseLocation().Y
+    end)
+
+    releaseConnection = UserInputService.InputEnded:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 then
+            moveConnection:Disconnect()
+            releaseConnection:Disconnect()
+        end
+    end)
+end)
+
+Main.Changed:Connect(function()
+    if Main.Size.X.Offset < resizeDefaultX then
+        Main.Size = UDim2.new(0, resizeDefaultX, 0, Main.Size.Y.Offset)
+    end
+    if Main.Size.Y.Offset < resizeDefaultY then
+        Main.Size = UDim2.new(0, Main.Size.X.Offset, 0, resizeDefaultY)
+    end
+end)
+
     local uitoggled = false
     UserInputService.InputBegan:Connect(
         function(io, p)
