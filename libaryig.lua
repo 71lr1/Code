@@ -147,7 +147,8 @@ DragOutline.Name = "DragOutline"
 DragOutline.Parent = ui
 DragOutline.BackgroundTransparency = 1
 DragOutline.BorderSizePixel = 0
-DragOutline.Size = Main.Size
+DragOutline.AnchorPoint = Vector2.new(0.5, 0.5)
+DragOutline.Size = UDim2.new(0, 560, 0, 319)
 DragOutline.Visible = false
 DragOutline.ZIndex = 999
 
