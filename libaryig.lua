@@ -142,7 +142,58 @@ function lib:Window(text, preset, closebind)
 
     Main:TweenSize(UDim2.new(0, 560, 0, 319), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, true)
 
-    MakeDraggable(DragFrame, Main)
+    local DragOutline = Instance.new("Frame")
+DragOutline.Name = "DragOutline"
+DragOutline.Parent = ui
+DragOutline.BackgroundTransparency = 1
+DragOutline.BorderSizePixel = 0
+DragOutline.Size = Main.Size
+DragOutline.Visible = false
+DragOutline.ZIndex = 999
+
+local DragOutlineStroke = Instance.new("UIStroke")
+DragOutlineStroke.Color = Color3.fromRGB(186, 13, 68)
+DragOutlineStroke.Thickness = 2
+DragOutlineStroke.Parent = DragOutline
+
+local DragOutlineCorner = Instance.new("UICorner")
+DragOutlineCorner.CornerRadius = UDim.new(0, 8)
+DragOutlineCorner.Parent = DragOutline
+
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+DragFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = Main.Position
+        DragOutline.Position = Main.Position
+        DragOutline.Size = Main.Size
+        DragOutline.Visible = true
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+        local delta = input.Position - dragStart
+        DragOutline.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and dragging then
+        dragging = false
+        Main.Position = DragOutline.Position
+        DragOutline.Visible = false
+    end
+end)
 
     local Resize = Instance.new("ImageButton")
     Resize.Name = "Resize"
