@@ -1719,8 +1719,6 @@ end)
     return tabhold
 end
 
-
-
 function lib:Notify(title, desc, duration)
     duration = duration or 3
 
@@ -1732,14 +1730,14 @@ function lib:Notify(title, desc, duration)
         NotifyHolder.BackgroundTransparency = 1
         NotifyHolder.AnchorPoint = Vector2.new(1, 1)
         NotifyHolder.Position = UDim2.new(1, -16, 1, -16)
-        NotifyHolder.Size = UDim2.new(0, 280, 1, -32)
+        NotifyHolder.Size = UDim2.new(0, 260, 1, -32)
         NotifyHolder.BorderSizePixel = 0
 
         local Layout = Instance.new("UIListLayout")
         Layout.Parent = NotifyHolder
         Layout.SortOrder = Enum.SortOrder.LayoutOrder
         Layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-        Layout.Padding = UDim.new(0, 8)
+        Layout.Padding = UDim.new(0, 6)
     end
 
     local Notify = Instance.new("Frame")
@@ -1749,79 +1747,103 @@ function lib:Notify(title, desc, duration)
     local TitleLabel = Instance.new("TextLabel")
     local DescLabel = Instance.new("TextLabel")
     local ProgressBar = Instance.new("Frame")
+    local ProgressBarBG = Instance.new("Frame")
+    local ProgressBarBGCorner = Instance.new("UICorner")
     local ProgressBarInner = Instance.new("Frame")
-    local ProgressBarCorner = Instance.new("UICorner")
+    local ProgressBarInnerCorner = Instance.new("UICorner")
 
     Notify.Name = "Notify"
     Notify.Parent = NotifyHolder
-    Notify.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Notify.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
     Notify.BorderSizePixel = 0
-    Notify.Size = UDim2.new(1, 0, 0, 70)
-    Notify.Position = UDim2.new(1.5, 0, 0, 0)
-    Notify.ClipsDescendants = true
+    Notify.Size = UDim2.new(1, 0, 0, 68)
+    Notify.Position = UDim2.new(1.6, 0, 0, 0)
+    Notify.ClipsDescendants = false
+    Notify.BackgroundTransparency = 1
 
     NotifyCorner.CornerRadius = UDim.new(0, 8)
     NotifyCorner.Parent = Notify
 
+    local NotifyInner = Instance.new("Frame")
+    NotifyInner.Name = "NotifyInner"
+    NotifyInner.Parent = Notify
+    NotifyInner.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    NotifyInner.BorderSizePixel = 0
+    NotifyInner.Size = UDim2.new(1, 0, 1, 0)
+    NotifyInner.ClipsDescendants = true
+
+    local NotifyInnerCorner = Instance.new("UICorner")
+    NotifyInnerCorner.CornerRadius = UDim.new(0, 8)
+    NotifyInnerCorner.Parent = NotifyInner
+
     Accent.Name = "Accent"
-    Accent.Parent = Notify
+    Accent.Parent = NotifyInner
     Accent.BackgroundColor3 = PresetColor
     Accent.BorderSizePixel = 0
     Accent.Size = UDim2.new(0, 3, 1, 0)
     Accent.Position = UDim2.new(0, 0, 0, 0)
+    Accent.ZIndex = 2
 
     AccentCorner.CornerRadius = UDim.new(0, 8)
     AccentCorner.Parent = Accent
 
-    coroutine.wrap(function()
-        while Notify and Notify.Parent do
-            Accent.BackgroundColor3 = PresetColor
-            wait()
-        end
-    end)()
-
     TitleLabel.Name = "Title"
-    TitleLabel.Parent = Notify
+    TitleLabel.Parent = NotifyInner
     TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Position = UDim2.new(0, 14, 0, 8)
-    TitleLabel.Size = UDim2.new(1, -18, 0, 20)
+    TitleLabel.Position = UDim2.new(0, 14, 0, 10)
+    TitleLabel.Size = UDim2.new(1, -18, 0, 18)
     TitleLabel.Font = Enum.Font.GothamSemibold
     TitleLabel.Text = title
-    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
     TitleLabel.TextSize = 13
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TitleLabel.ZIndex = 2
 
     DescLabel.Name = "Desc"
-    DescLabel.Parent = Notify
+    DescLabel.Parent = NotifyInner
     DescLabel.BackgroundTransparency = 1
     DescLabel.Position = UDim2.new(0, 14, 0, 30)
-    DescLabel.Size = UDim2.new(1, -18, 0, 28)
+    DescLabel.Size = UDim2.new(1, -18, 0, 26)
     DescLabel.Font = Enum.Font.Gotham
     DescLabel.Text = desc
-    DescLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-    DescLabel.TextSize = 12
+    DescLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
+    DescLabel.TextSize = 11
     DescLabel.TextXAlignment = Enum.TextXAlignment.Left
     DescLabel.TextYAlignment = Enum.TextYAlignment.Top
     DescLabel.TextWrapped = true
+    DescLabel.ZIndex = 2
 
     ProgressBar.Name = "ProgressBar"
-    ProgressBar.Parent = Notify
-    ProgressBar.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    ProgressBar.Parent = NotifyInner
+    ProgressBar.BackgroundTransparency = 1
     ProgressBar.BorderSizePixel = 0
-    ProgressBar.Position = UDim2.new(0, 0, 1, -3)
-    ProgressBar.Size = UDim2.new(1, 0, 0, 3)
+    ProgressBar.Position = UDim2.new(0, 14, 1, -10)
+    ProgressBar.Size = UDim2.new(1, -28, 0, 3)
+    ProgressBar.ZIndex = 2
+
+    ProgressBarBG.Name = "ProgressBarBG"
+    ProgressBarBG.Parent = ProgressBar
+    ProgressBarBG.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    ProgressBarBG.BorderSizePixel = 0
+    ProgressBarBG.Size = UDim2.new(1, 0, 1, 0)
+    ProgressBarBG.ZIndex = 2
+
+    ProgressBarBGCorner.CornerRadius = UDim.new(1, 0)
+    ProgressBarBGCorner.Parent = ProgressBarBG
 
     ProgressBarInner.Name = "ProgressBarInner"
     ProgressBarInner.Parent = ProgressBar
     ProgressBarInner.BackgroundColor3 = PresetColor
     ProgressBarInner.BorderSizePixel = 0
     ProgressBarInner.Size = UDim2.new(1, 0, 1, 0)
+    ProgressBarInner.ZIndex = 3
 
-    ProgressBarCorner.CornerRadius = UDim.new(0, 8)
-    ProgressBarCorner.Parent = ProgressBar
+    ProgressBarInnerCorner.CornerRadius = UDim.new(1, 0)
+    ProgressBarInnerCorner.Parent = ProgressBarInner
 
     coroutine.wrap(function()
-        while ProgressBarInner and ProgressBarInner.Parent do
+        while Notify and Notify.Parent do
+            Accent.BackgroundColor3 = PresetColor
             ProgressBarInner.BackgroundColor3 = PresetColor
             wait()
         end
@@ -1829,8 +1851,8 @@ function lib:Notify(title, desc, duration)
 
     TweenService:Create(
         Notify,
-        TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-        {Position = UDim2.new(0, 0, 0, 0)}
+        TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+        {Position = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 0}
     ):Play()
 
     coroutine.wrap(function()
@@ -1838,16 +1860,16 @@ function lib:Notify(title, desc, duration)
         for i = steps, 0, -1 do
             if not ProgressBarInner or not ProgressBarInner.Parent then break end
             ProgressBarInner.Size = UDim2.new(i / steps, 0, 1, 0)
-            wait(1/60)
+            wait(1 / 60)
         end
 
         TweenService:Create(
             Notify,
-            TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.In),
-            {Position = UDim2.new(1.5, 0, 0, 0)}
+            TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.In),
+            {Position = UDim2.new(1.6, 0, 0, 0)}
         ):Play()
 
-        wait(0.4)
+        wait(0.45)
         if Notify and Notify.Parent then
             Notify:Destroy()
         end
