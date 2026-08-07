@@ -563,328 +563,377 @@ end)
             Tab.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y)
         end
 
-        function tabcontent:Toggle(text,default, callback)
-            local toggled = false
+function tabcontent:Toggle(text, default, callback)
+    local toggled = false
 
-            local Toggle = Instance.new("TextButton")
-            local ToggleCorner = Instance.new("UICorner")
-            local ToggleTitle = Instance.new("TextLabel")
-            local FrameToggle1 = Instance.new("Frame")
-            local FrameToggle1Corner = Instance.new("UICorner")
-            local FrameToggle2 = Instance.new("Frame")
-            local FrameToggle2Corner = Instance.new("UICorner")
-            local FrameToggle3 = Instance.new("Frame")
-            local FrameToggle3Corner = Instance.new("UICorner")
-            local FrameToggleCircle = Instance.new("Frame")
-            local FrameToggleCircleCorner = Instance.new("UICorner")
+    local Toggle = Instance.new("TextButton")
+    local ToggleCorner = Instance.new("UICorner")
+    local ToggleTitle = Instance.new("TextLabel")
+    local Track = Instance.new("Frame")
+    local TrackCorner = Instance.new("UICorner")
+    local TrackStroke = Instance.new("UIStroke")
+    local Indicator = Instance.new("Frame")
+    local IndicatorCorner = Instance.new("UICorner")
+    local IndicatorStroke = Instance.new("UIStroke")
+    local IndicatorGlow = Instance.new("Frame")
+    local IndicatorGlowCorner = Instance.new("UICorner")
 
-            Toggle.Name = "Toggle"
-            Toggle.Parent = Tab
+    Toggle.Name = "Toggle"
+    Toggle.Parent = Tab
+    Toggle.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+    Toggle.Size = UDim2.new(0, 363, 0, 42)
+    Toggle.AutoButtonColor = false
+    Toggle.Font = Enum.Font.SourceSans
+    Toggle.Text = ""
+    Toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
+    Toggle.TextSize = 14
+
+    ToggleCorner.CornerRadius = UDim.new(0, 5)
+    ToggleCorner.Parent = Toggle
+
+    ToggleTitle.Name = "ToggleTitle"
+    ToggleTitle.Parent = Toggle
+    ToggleTitle.BackgroundTransparency = 1
+    ToggleTitle.Position = UDim2.new(0, 13, 0, 0)
+    ToggleTitle.Size = UDim2.new(0, 250, 1, 0)
+    ToggleTitle.Font = Enum.Font.Gotham
+    ToggleTitle.Text = text
+    ToggleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleTitle.TextSize = 14
+    ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+    Track.Name = "Track"
+    Track.Parent = Toggle
+    Track.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Track.BackgroundTransparency = 0.9
+    Track.AnchorPoint = Vector2.new(1, 0.5)
+    Track.Position = UDim2.new(1, -13, 0.5, 0)
+    Track.Size = UDim2.new(0, 50, 0, 21)
+
+    TrackCorner.CornerRadius = UDim.new(0, 15)
+    TrackCorner.Parent = Track
+
+    TrackStroke.Color = Color3.fromRGB(255, 255, 255)
+    TrackStroke.Transparency = 0.85
+    TrackStroke.Parent = Track
+
+    Indicator.Name = "Indicator"
+    Indicator.Parent = Track
+    Indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Indicator.BackgroundTransparency = 0.2
+    Indicator.AnchorPoint = Vector2.new(0, 0.5)
+    Indicator.Position = UDim2.new(0, 3, 0.5, 0)
+    Indicator.Size = UDim2.new(0, 17, 0, 17)
+
+    IndicatorCorner.CornerRadius = UDim.new(1, 0)
+    IndicatorCorner.Parent = Indicator
+
+    IndicatorStroke.Color = Color3.fromRGB(255, 255, 255)
+    IndicatorStroke.Transparency = 0.7
+    IndicatorStroke.Parent = Indicator
+
+    IndicatorGlow.Name = "IndicatorGlow"
+    IndicatorGlow.Parent = Indicator
+    IndicatorGlow.BackgroundColor3 = PresetColor
+    IndicatorGlow.BackgroundTransparency = 1
+    IndicatorGlow.AnchorPoint = Vector2.new(0.5, 0.5)
+    IndicatorGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    IndicatorGlow.Size = UDim2.new(1, 14, 1, 14)
+    IndicatorGlow.ZIndex = 0
+
+    IndicatorGlowCorner.CornerRadius = UDim.new(1, 0)
+    IndicatorGlowCorner.Parent = IndicatorGlow
+
+    coroutine.wrap(function()
+        while Toggle and Toggle.Parent do
+            IndicatorGlow.BackgroundColor3 = PresetColor
+            wait()
+        end
+    end)()
+
+    local tweenInfo = TweenInfo.new(0.6, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+
+    local function setOn(animate)
+        if animate then
+            TweenService:Create(Toggle, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(37, 37, 37)}):Play()
+            TweenService:Create(Indicator, tweenInfo, {
+                Position = UDim2.new(1, -20, 0.5, 0),
+                BackgroundColor3 = PresetColor,
+                BackgroundTransparency = 0
+            }):Play()
+            TweenService:Create(IndicatorStroke, tweenInfo, {
+                Color = PresetColor,
+                Transparency = 0
+            }):Play()
+            TweenService:Create(IndicatorGlow, tweenInfo, {BackgroundTransparency = 0.6}):Play()
+            TweenService:Create(TrackStroke, tweenInfo, {Transparency = 1}):Play()
+            TweenService:Create(Track, tweenInfo, {BackgroundTransparency = 1}):Play()
+        else
+            Toggle.BackgroundColor3 = Color3.fromRGB(37, 37, 37)
+            Indicator.Position = UDim2.new(1, -20, 0.5, 0)
+            Indicator.BackgroundColor3 = PresetColor
+            Indicator.BackgroundTransparency = 0
+            IndicatorStroke.Color = PresetColor
+            IndicatorStroke.Transparency = 0
+            IndicatorGlow.BackgroundTransparency = 0.6
+            TrackStroke.Transparency = 1
+            Track.BackgroundTransparency = 1
+        end
+    end
+
+    local function setOff(animate)
+        if animate then
+            TweenService:Create(Toggle, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(34, 34, 34)}):Play()
+            TweenService:Create(Indicator, tweenInfo, {
+                Position = UDim2.new(0, 3, 0.5, 0),
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 0.2
+            }):Play()
+            TweenService:Create(IndicatorStroke, tweenInfo, {
+                Color = Color3.fromRGB(255, 255, 255),
+                Transparency = 0.7
+            }):Play()
+            TweenService:Create(IndicatorGlow, tweenInfo, {BackgroundTransparency = 1}):Play()
+            TweenService:Create(TrackStroke, tweenInfo, {Transparency = 0.85}):Play()
+            TweenService:Create(Track, tweenInfo, {BackgroundTransparency = 0.9}):Play()
+        else
             Toggle.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-            Toggle.Position = UDim2.new(0.215625003, 0, 0.446271926, 0)
-            Toggle.Size = UDim2.new(0, 363, 0, 42)
-            Toggle.AutoButtonColor = false
-            Toggle.Font = Enum.Font.SourceSans
-            Toggle.Text = ""
-            Toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
-            Toggle.TextSize = 14.000
-
-            ToggleCorner.CornerRadius = UDim.new(0, 5)
-            ToggleCorner.Name = "ToggleCorner"
-            ToggleCorner.Parent = Toggle
-
-            ToggleTitle.Name = "ToggleTitle"
-            ToggleTitle.Parent = Toggle
-            ToggleTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            ToggleTitle.BackgroundTransparency = 1.000
-            ToggleTitle.Position = UDim2.new(0.0358126722, 0, 0, 0)
-            ToggleTitle.Size = UDim2.new(0, 187, 0, 42)
-            ToggleTitle.Font = Enum.Font.Gotham
-            ToggleTitle.Text = text
-            ToggleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-            ToggleTitle.TextSize = 14.000
-            ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
-
-            FrameToggle1.Name = "FrameToggle1"
-            FrameToggle1.Parent = Toggle
-            FrameToggle1.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-            FrameToggle1.Position = UDim2.new(0.859504104, 0, 0.285714298, 0)
-            FrameToggle1.Size = UDim2.new(0, 37, 0, 18)
-
-            FrameToggle1Corner.Name = "FrameToggle1Corner"
-            FrameToggle1Corner.Parent = FrameToggle1
-
-            FrameToggle2.Name = "FrameToggle2"
-            FrameToggle2.Parent = FrameToggle1
-            FrameToggle2.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-            FrameToggle2.Position = UDim2.new(0.0489999987, 0, 0.0930000022, 0)
-            FrameToggle2.Size = UDim2.new(0, 33, 0, 14)
-
-            FrameToggle2Corner.Name = "FrameToggle2Corner"
-            FrameToggle2Corner.Parent = FrameToggle2
-
-            FrameToggle3.Name = "FrameToggle3"
-            FrameToggle3.Parent = FrameToggle1
-            FrameToggle3.BackgroundColor3 = PresetColor
-            FrameToggle3.BackgroundTransparency = 1.000
-            FrameToggle3.Size = UDim2.new(0, 37, 0, 18)
-
-            FrameToggle3Corner.Name = "FrameToggle3Corner"
-            FrameToggle3Corner.Parent = FrameToggle3
-
-            FrameToggleCircle.Name = "FrameToggleCircle"
-            FrameToggleCircle.Parent = FrameToggle1
-            FrameToggleCircle.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-            FrameToggleCircle.Position = UDim2.new(0.127000004, 0, 0.222000003, 0)
-            FrameToggleCircle.Size = UDim2.new(0, 10, 0, 10)
-
-            FrameToggleCircleCorner.Name = "FrameToggleCircleCorner"
-            FrameToggleCircleCorner.Parent = FrameToggleCircle
-
-            coroutine.wrap(
-                function()
-                    while wait() do
-                        FrameToggle3.BackgroundColor3 = PresetColor
-                    end
-                end
-            )()
-
-            Toggle.MouseButton1Click:Connect(
-                function()
-                    if toggled == false then
-                        TweenService:Create(
-                            Toggle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(37, 37, 37)}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle1,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 1}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle2,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 1}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle3,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 0}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggleCircle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(255, 255, 255)}
-                        ):Play()
-                        FrameToggleCircle:TweenPosition(
-                            UDim2.new(0.587, 0, 0.222000003, 0),
-                            Enum.EasingDirection.Out,
-                            Enum.EasingStyle.Quart,
-                            .2,
-                            true
-                        )
-                    else
-                        TweenService:Create(
-                            Toggle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(34, 34, 34)}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle1,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 0}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle2,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 0}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle3,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 1}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggleCircle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}
-                        ):Play()
-                        FrameToggleCircle:TweenPosition(
-                            UDim2.new(0.127000004, 0, 0.222000003, 0),
-                            Enum.EasingDirection.Out,
-                            Enum.EasingStyle.Quart,
-                            .2,
-                            true
-                        )
-                    end
-                    toggled = not toggled
-                    pcall(callback, toggled)
-                end
-            )
-
-            if default == true then
-                TweenService:Create(
-                    Toggle,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundColor3 = Color3.fromRGB(37, 37, 37)}
-                ):Play()
-                TweenService:Create(
-                    FrameToggle1,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundTransparency = 1}
-                ):Play()
-                TweenService:Create(
-                    FrameToggle2,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundTransparency = 1}
-                ):Play()
-                TweenService:Create(
-                    FrameToggle3,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundTransparency = 0}
-                ):Play()
-                TweenService:Create(
-                    FrameToggleCircle,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundColor3 = Color3.fromRGB(255, 255, 255)}
-                ):Play()
-                FrameToggleCircle:TweenPosition(
-                    UDim2.new(0.587, 0, 0.222000003, 0),
-                    Enum.EasingDirection.Out,
-                    Enum.EasingStyle.Quart,
-                    .2,
-                    true
-                )
-                toggled = not toggled
-            end
-
-            Tab.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y)
+            Indicator.Position = UDim2.new(0, 3, 0.5, 0)
+            Indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Indicator.BackgroundTransparency = 0.2
+            IndicatorStroke.Color = Color3.fromRGB(255, 255, 255)
+            IndicatorStroke.Transparency = 0.7
+            IndicatorGlow.BackgroundTransparency = 1
+            TrackStroke.Transparency = 0.85
+            Track.BackgroundTransparency = 0.9
         end
-        function tabcontent:Slider(text, min, max, start, callback)
-            local dragging = false
-            local Slider = Instance.new("TextButton")
-            local SliderCorner = Instance.new("UICorner")
-            local SliderTitle = Instance.new("TextLabel")
-            local SliderValue = Instance.new("TextLabel")
-            local SlideFrame = Instance.new("Frame")
-            local CurrentValueFrame = Instance.new("Frame")
-            local SlideCircle = Instance.new("ImageButton")
+    end
 
-            Slider.Name = "Slider"
-            Slider.Parent = Tab
-            Slider.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-            Slider.Position = UDim2.new(-0.48035714, 0, -0.570532918, 0)
-            Slider.Size = UDim2.new(0, 363, 0, 60)
-            Slider.AutoButtonColor = false
-            Slider.Font = Enum.Font.SourceSans
-            Slider.Text = ""
-            Slider.TextColor3 = Color3.fromRGB(0, 0, 0)
-            Slider.TextSize = 14.000
+    Toggle.MouseButton1Click:Connect(function()
+        local clickInfo = TweenInfo.new(0.6, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+        TweenService:Create(Toggle, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, 357, 0, 42)}):Play()
+        task.delay(0.11, function()
+            TweenService:Create(Toggle, TweenInfo.new(0.25, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2.new(0, 363, 0, 42)}):Play()
+        end)
 
-            SliderCorner.CornerRadius = UDim.new(0, 5)
-            SliderCorner.Name = "SliderCorner"
-            SliderCorner.Parent = Slider
-
-            SliderTitle.Name = "SliderTitle"
-            SliderTitle.Parent = Slider
-            SliderTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            SliderTitle.BackgroundTransparency = 1.000
-            SliderTitle.Position = UDim2.new(0.0358126722, 0, 0, 0)
-            SliderTitle.Size = UDim2.new(0, 187, 0, 42)
-            SliderTitle.Font = Enum.Font.Gotham
-            SliderTitle.Text = text
-            SliderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-            SliderTitle.TextSize = 14.000
-            SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
-
-            SliderValue.Name = "SliderValue"
-            SliderValue.Parent = Slider
-            SliderValue.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            SliderValue.BackgroundTransparency = 1.000
-            SliderValue.Position = UDim2.new(0.0358126722, 0, 0, 0)
-            SliderValue.Size = UDim2.new(0, 335, 0, 42)
-            SliderValue.Font = Enum.Font.Gotham
-            SliderValue.Text = tostring(start and math.floor((start / max) * (max - min) + min) or 0)
-            SliderValue.TextColor3 = Color3.fromRGB(255, 255, 255)
-            SliderValue.TextSize = 14.000
-            SliderValue.TextXAlignment = Enum.TextXAlignment.Right
-
-            SlideFrame.Name = "SlideFrame"
-            SlideFrame.Parent = Slider
-            SlideFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-            SlideFrame.BorderSizePixel = 0
-            SlideFrame.Position = UDim2.new(0.0342647657, 0, 0.686091602, 0)
-            SlideFrame.Size = UDim2.new(0, 335, 0, 3)
-
-            CurrentValueFrame.Name = "CurrentValueFrame"
-            CurrentValueFrame.Parent = SlideFrame
-            CurrentValueFrame.BackgroundColor3 = PresetColor
-            CurrentValueFrame.BorderSizePixel = 0
-            CurrentValueFrame.Size = UDim2.new((start or 0) / max, 0, 0, 3)
-
-            SlideCircle.Name = "SlideCircle"
-            SlideCircle.Parent = SlideFrame
-            SlideCircle.BackgroundColor3 = PresetColor
-            SlideCircle.BackgroundTransparency = 1.000
-            SlideCircle.Position = UDim2.new((start or 0) / max, -6, -1.30499995, 0)
-            SlideCircle.Size = UDim2.new(0, 11, 0, 11)
-            SlideCircle.Image = "rbxassetid://3570695787"
-            SlideCircle.ImageColor3 = PresetColor
-
-            coroutine.wrap(
-                function()
-                    while wait() do
-                        CurrentValueFrame.BackgroundColor3 = PresetColor
-                        SlideCircle.ImageColor3 = PresetColor
-                    end
-                end
-            )()
-
-            local function move(input)
-                local pos =
-                    UDim2.new(
-                    math.clamp((input.Position.X - SlideFrame.AbsolutePosition.X) / SlideFrame.AbsoluteSize.X, 0, 1),
-                    -6,
-                    -1.30499995,
-                    0
-                )
-                local pos1 =
-                    UDim2.new(
-                    math.clamp((input.Position.X - SlideFrame.AbsolutePosition.X) / SlideFrame.AbsoluteSize.X, 0, 1),
-                    0,
-                    0,
-                    3
-                )
-                CurrentValueFrame:TweenSize(pos1, "Out", "Sine", 0.1, true)
-                SlideCircle:TweenPosition(pos, "Out", "Sine", 0.1, true)
-                local value = math.floor(((pos.X.Scale * max) / max) * (max - min) + min)
-                SliderValue.Text = tostring(value)
-                pcall(callback, value)
-            end
-            SlideCircle.InputBegan:Connect(
-                function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        dragging = true
-                    end
-                end
-            )
-            SlideCircle.InputEnded:Connect(
-                function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        dragging = false
-                    end
-                end
-            )
-            game:GetService("UserInputService").InputChanged:Connect(
-                function(input)
-                    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-                        move(input)
-                    end
-                end
-            )
-            Tab.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y)
+        toggled = not toggled
+        if toggled then
+            setOn(true)
+        else
+            setOff(true)
         end
+        pcall(callback, toggled)
+    end)
+
+    if default == true then
+        toggled = true
+        setOn(false)
+    end
+
+    Tab.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y)
+end
+
+function tabcontent:Slider(text, min, max, start, callback)
+    local dragging = false
+
+    local Slider = Instance.new("TextButton")
+    local SliderCorner = Instance.new("UICorner")
+    local SliderTitle = Instance.new("TextLabel")
+    local SliderValue = Instance.new("TextLabel")
+    local Track = Instance.new("Frame")
+    local TrackCorner = Instance.new("UICorner")
+    local Progress = Instance.new("Frame")
+    local ProgressCorner = Instance.new("UICorner")
+    local ProgressGradient = Instance.new("UIGradient")
+    local ProgressGlow = Instance.new("Frame")
+    local ProgressGlowCorner = Instance.new("UICorner")
+    local Handle = Instance.new("Frame")
+    local HandleCorner = Instance.new("UICorner")
+    local HandleStroke = Instance.new("UIStroke")
+    local Interact = Instance.new("TextButton")
+
+    Slider.Name = "Slider"
+    Slider.Parent = Tab
+    Slider.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+    Slider.Size = UDim2.new(0, 363, 0, 60)
+    Slider.AutoButtonColor = false
+    Slider.Font = Enum.Font.SourceSans
+    Slider.Text = ""
+    Slider.TextSize = 14
+
+    SliderCorner.CornerRadius = UDim.new(0, 5)
+    SliderCorner.Parent = Slider
+
+    SliderTitle.Name = "SliderTitle"
+    SliderTitle.Parent = Slider
+    SliderTitle.BackgroundTransparency = 1
+    SliderTitle.Position = UDim2.new(0, 13, 0, 0)
+    SliderTitle.Size = UDim2.new(0, 200, 0, 42)
+    SliderTitle.Font = Enum.Font.Gotham
+    SliderTitle.Text = text
+    SliderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SliderTitle.TextSize = 14
+    SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+    SliderValue.Name = "SliderValue"
+    SliderValue.Parent = Slider
+    SliderValue.BackgroundTransparency = 1
+    SliderValue.Position = UDim2.new(0, 13, 0, 0)
+    SliderValue.Size = UDim2.new(1, -26, 0, 42)
+    SliderValue.Font = Enum.Font.Gotham
+    SliderValue.Text = tostring(start or min)
+    SliderValue.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SliderValue.TextSize = 14
+    SliderValue.TextXAlignment = Enum.TextXAlignment.Right
+
+    Track.Name = "Track"
+    Track.Parent = Slider
+    Track.AnchorPoint = Vector2.new(1, 0.5)
+    Track.Position = UDim2.new(1, -13, 1, -14)
+    Track.Size = UDim2.new(1, -26, 0, 14)
+    Track.BackgroundColor3 = Color3.fromRGB(47, 47, 47)
+    Track.BorderSizePixel = 0
+
+    TrackCorner.CornerRadius = UDim.new(0, 13)
+    TrackCorner.Parent = Track
+
+    Progress.Name = "Progress"
+    Progress.Parent = Track
+    Progress.AnchorPoint = Vector2.new(0, 0.5)
+    Progress.Position = UDim2.fromScale(0, 0.5)
+    Progress.Size = UDim2.new((start or min) / max, 0, 1, 0)
+    Progress.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Progress.BorderSizePixel = 0
+    Progress.ZIndex = 2
+
+    ProgressCorner.CornerRadius = UDim.new(0, 13)
+    ProgressCorner.Parent = Progress
+
+    ProgressGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+    })
+    ProgressGradient.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0.15),
+        NumberSequenceKeypoint.new(1, 0)
+    })
+    ProgressGradient.Rotation = 2
+    ProgressGradient.Parent = Progress
+
+    ProgressGlow.Name = "ProgressGlow"
+    ProgressGlow.Parent = Progress
+    ProgressGlow.BackgroundColor3 = PresetColor
+    ProgressGlow.BackgroundTransparency = 0.55
+    ProgressGlow.AnchorPoint = Vector2.new(0.5, 0.5)
+    ProgressGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    ProgressGlow.Size = UDim2.new(1, 12, 1, 12)
+    ProgressGlow.ZIndex = 1
+
+    ProgressGlowCorner.CornerRadius = UDim.new(1, 0)
+    ProgressGlowCorner.Parent = ProgressGlow
+
+    Handle.Name = "Handle"
+    Handle.Parent = Progress
+    Handle.AnchorPoint = Vector2.new(1, 0.5)
+    Handle.Position = UDim2.new(1, 20, 0.5, 0)
+    Handle.Size = UDim2.new(0, 35, 0, 20)
+    Handle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Handle.ZIndex = 50
+
+    HandleCorner.CornerRadius = UDim.new(1, 0)
+    HandleCorner.Parent = Handle
+
+    HandleStroke.Color = Color3.fromRGB(255, 255, 255)
+    HandleStroke.Transparency = 1
+    HandleStroke.Parent = Handle
+
+    Interact.Name = "Interact"
+    Interact.Parent = Track
+    Interact.BackgroundTransparency = 1
+    Interact.Size = UDim2.new(1, 16, 1, 8)
+    Interact.Position = UDim2.fromScale(0.5, 0.5)
+    Interact.AnchorPoint = Vector2.new(0.5, 0.5)
+    Interact.Text = ""
+    Interact.ZIndex = 10
+
+    coroutine.wrap(function()
+        while Slider and Slider.Parent do
+            Progress.BackgroundColor3 = PresetColor
+            ProgressGlow.BackgroundColor3 = PresetColor
+            wait()
+        end
+    end)()
+
+    local holdInfo = TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+    local moveInfo = TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+
+    local function setHeld(held)
+        if held then
+            TweenService:Create(Handle, holdInfo, {Size = UDim2.new(0, 41, 0, 22), BackgroundTransparency = 0.7}):Play()
+            TweenService:Create(HandleStroke, holdInfo, {Transparency = 0.6}):Play()
+            TweenService:Create(Track, holdInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+        else
+            TweenService:Create(Handle, holdInfo, {Size = UDim2.new(0, 35, 0, 20), BackgroundTransparency = 0}):Play()
+            TweenService:Create(HandleStroke, holdInfo, {Transparency = 1}):Play()
+            TweenService:Create(Track, holdInfo, {BackgroundColor3 = Color3.fromRGB(47, 47, 47)}):Play()
+        end
+    end
+
+    local function move(input)
+        local scale = math.clamp((input.Position.X - Track.AbsolutePosition.X) / Track.AbsoluteSize.X, 0, 1)
+        local value = math.floor(scale * (max - min) + min)
+
+        TweenService:Create(Progress, moveInfo, {Size = UDim2.new(scale, 0, 1, 0)}):Play()
+        SliderValue.Text = tostring(value)
+        pcall(callback, value)
+    end
+
+    Slider.MouseEnter:Connect(function()
+        TweenService:Create(Track, TweenInfo.new(0.45, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+    end)
+
+    Slider.MouseLeave:Connect(function()
+        if not dragging then
+            TweenService:Create(Track, TweenInfo.new(0.45, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(47, 47, 47)}):Play()
+        end
+    end)
+
+    Interact.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            setHeld(true)
+            move(input)
+
+            local dragConn
+            dragConn = game:GetService("RunService").RenderStepped:Connect(function()
+                if not dragging then
+                    dragConn:Disconnect()
+                    return
+                end
+                local mousePos = game:GetService("UserInputService"):GetMouseLocation()
+                local fakeInput = {Position = Vector3.new(mousePos.X, mousePos.Y, 0)}
+                move(fakeInput)
+            end)
+        end
+    end)
+
+    game:GetService("UserInputService").InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 and dragging then
+            dragging = false
+            setHeld(false)
+        end
+    end)
+
+    if start then
+        local scale = math.clamp((start - min) / (max - min), 0, 1)
+        Progress.Size = UDim2.new(scale, 0, 1, 0)
+        SliderValue.Text = tostring(start)
+        pcall(callback, start)
+    end
+
+    Tab.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y)
+end
+        
         function tabcontent:Dropdown(text, list, callback)
             local droptog = false
             local framesize = 0
