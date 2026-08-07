@@ -1854,8 +1854,5 @@ function lib:Notify(title, desc, duration)
     end)()
 end
 
-return lib
-
-
 
 return lib
